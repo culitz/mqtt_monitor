@@ -1,22 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import 'mqtt/client.dart';
+import 'package:mqtt_app/mqtt/client.dart';
+import 'package:mqtt_app/mqtt/message.dart';
 import 'package:mqtt_client/mqtt_client.dart';
-import 'mqtt/message.dart';
-
-void main() async {
-  runApp(App());
-}
-
-
-
-class App extends StatefulWidget {
-  @override
-  _AppPageState createState() => _AppPageState();
-}
 
 
 class _AppPageState extends State<App> {
@@ -100,5 +87,3 @@ class _AppPageState extends State<App> {
         .toList();
   }
 }
-
-

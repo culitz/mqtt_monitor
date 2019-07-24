@@ -1,9 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'dart:async';
 
 
 class AndroidMqttClient extends MqttClient{
-
+  bool debug = true;
   AndroidMqttClient(String server, String clientIdentifier) : super(server, clientIdentifier){
     super.logging(on: false);
     super.keepAlivePeriod = 20;
@@ -27,7 +28,11 @@ class AndroidMqttClient extends MqttClient{
     try {
       await super.connect();
     } on Exception catch (e) {
-      print('EXAMPLE::client exception - $e');
+      if(debug){
+        print("###############################");
+        print('EXAMPLE::client exception - $e');
+        print("###############################");
+      }
       super.disconnect();
     }
 
