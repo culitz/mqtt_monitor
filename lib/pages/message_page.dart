@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_app/mqtt/message.dart';
-import 'page.dart';
+import "package:mqtt_app/main.dart";
 
-class MessagePage implements Page{
+class MessagePage extends StatefulWidget {
+  @override
+  _MessagePageState createState() => _MessagePageState();
+}
+
+class _MessagePageState extends State<MessagePage>{
 
   ScrollController messageScrollController = ScrollController();
-  List<Message> messages = <Message>[];
-
-  Scaffold buildPage() {
+  
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Messages"),),
       body: Column(

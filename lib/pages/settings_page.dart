@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
-import 'page.dart';
 
-class SettingsPage implements Page{
+
+class SettingsPage extends StatefulWidget {
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage>{
   List<Widget> settings = <Widget>[];
 
   TextEditingController brokerController = TextEditingController();
   TextEditingController brokerPortController = TextEditingController();
 
-  Scaffold buildPage() {
+  @override
+  Widget build (BuildContext context)  {
     return Scaffold(
       appBar: AppBar(title: Text("Settings"),),
       body: Column(

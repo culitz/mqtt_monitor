@@ -6,10 +6,12 @@ import 'pages/message_page.dart' as msgPage;
 import 'pages/settings_page.dart' as stgPage;
 import 'pages/topic_page.dart' as topPage;
 
+
+List<Message> messages = <Message>[];
+
 void main() async {
   runApp(App());
 }
-
 
 class App extends StatefulWidget {
   @override
@@ -17,10 +19,6 @@ class App extends StatefulWidget {
 }
 
 class _AppPageState extends State<App> {
-  // Pages
-  msgPage.MessagePage messagePage = new msgPage.MessagePage();
-  stgPage.SettingsPage settingsPage = new stgPage.SettingsPage();
-  topPage.TopicPage topicPage = new topPage.TopicPage();
 
   AndroidMqttClient client = new AndroidMqttClient('10.20.33.62', '');
   String time = "None";
@@ -51,9 +49,9 @@ class _AppPageState extends State<App> {
         controller: _pageController,
         onPageChanged: onPageChanged,
         children: <Widget>[
-          settingsPage.buildPage(),
-          messagePage.buildPage(),
-          topicPage.buildPage(),
+          new stgPage.SettingsPage(),
+          new msgPage.MessagePage(),
+          new topPage.TopicPage(),
         ],
       ), 
       ),
@@ -73,7 +71,7 @@ class _AppPageState extends State<App> {
         time = pt;
         print(time);
         setState(() {
-          messagePage.messages.add(Message(
+          messages.add(Message(
             message: pt, 
             topic: topic, 
             qos: recMess.payload.header.qos
