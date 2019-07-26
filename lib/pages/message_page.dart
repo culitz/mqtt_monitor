@@ -1,69 +1,36 @@
-import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mqtt_app/mqtt/client.dart';
 import 'package:mqtt_app/mqtt/message.dart';
-import 'package:mqtt_client/mqtt_client.dart';
+import 'page.dart';
 
+class MessagePage implements Page{
 
-class _AppPageState extends State<App> {
-  AndroidMqttClient client = new AndroidMqttClient('10.20.33.62', '');
-
-  List<Message> messages = <Message>[];
   ScrollController messageScrollController = ScrollController();
-  String time = "None";
+  List<Message> messages = <Message>[];
 
-
-  @override
-  void initState() {
-    startInit();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("AppBar"),
-        ),
-        body: ListView(
-          controller: messageScrollController,
-          children: _getMessages(),
-        ),
+  Scaffold buildPage() {
+    return Scaffold(
+      appBar: AppBar(title: Text("Messages"),),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView(
+              controller: messageScrollController,
+              children: _buildMessageList(),
+            ),
+          ),
+        ],
       )
     );
   }
 
-  void startInit() async{
-    await client.makeConnect();
-    print('APP::Subscribing to the /devices/tbot/controls/time topic');
-    const String topic = '/devices/tbot/controls/time'; // Not a wildcard topic
-    client.makeSubscribe(topic);
-
-    client.updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
-        final MqttPublishMessage recMess = c[0].payload;
-        final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-        time = pt;
-        print(time);
-        setState(() {
-          messages.add(Message(
-            message: pt, 
-            topic: topic, 
-            qos: recMess.payload.header.qos
-            ));
-        });
-    });
-  }
-
-  List<Widget> _getMessages(){
+  List<Widget> _buildMessageList(){
+    _checkListLen(messages);
     return messages
         .map((Message message) => Card(
               color: Colors.white70,
               child: ListTile(
                 trailing: CircleAvatar(
                     radius: 14.0,
-                    backgroundColor: Theme.of(context).accentColor,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -85,5 +52,11 @@ class _AppPageState extends State<App> {
         .toList()
         .reversed
         .toList();
+  }
+
+  void _checkListLen(List<Message> message) {
+    if(message.length > 5){
+      message.remove(message[0]);
+    }
   }
 }
