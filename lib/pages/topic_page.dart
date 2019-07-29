@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_app/mqtt/topic.dart';
+import 'package:mqtt_app/main.dart';
 
 
 
@@ -9,7 +10,6 @@ class TopicPage extends StatefulWidget {
 }
 
 class _TopicPageState extends State<TopicPage> {
-  final List<Topic> topics = <Topic>[];
   final TextEditingController topicNameController = TextEditingController();
   final TextEditingController topicSymbolsController = TextEditingController();
   final ScrollController listController = ScrollController();
@@ -56,7 +56,7 @@ class _TopicPageState extends State<TopicPage> {
                     onPressed: (){
                       setState(() {
                         topics.add(
-                        Topic(name: topicNameController.text,
+                        MqttTopic(name: topicNameController.text,
                               symbols: topicSymbolsController.text)
                        );
                       });
@@ -74,7 +74,7 @@ class _TopicPageState extends State<TopicPage> {
 
   List<Widget> _buildTopicList(){
     return topics
-        .map((Topic topic) => Card(
+        .map((MqttTopic topic) => Card(
               color: Colors.white70,
               child: ListTile(
                 title: Text(topic.name),

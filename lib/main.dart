@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_app/mqtt/message.dart';
+import 'package:mqtt_app/mqtt/topic.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'mqtt/client.dart';
 import 'pages/message_page.dart' as msgPage;
@@ -8,6 +9,7 @@ import 'pages/topic_page.dart' as topPage;
 
 
 List<Message> messages = <Message>[];
+List<MqttTopic> topics = <MqttTopic>[];
 
 void main() async {
   runApp(App());
@@ -42,9 +44,6 @@ class _AppPageState extends State<App> {
   Widget build(BuildContext context){
     return MaterialApp(
       home: Scaffold(
-      //  appBar: AppBar(
-      //    title: Text("mqtt"),
-      //  ),
       body: PageView(
         controller: _pageController,
         onPageChanged: onPageChanged,

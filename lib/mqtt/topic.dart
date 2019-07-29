@@ -1,7 +1,7 @@
 
-class Topic {
+class MqttTopic {
   final String name;
   final String symbols;
 
-  Topic({this.name, this.symbols});
+  MqttTopic({this.name, this.symbols});
 }
