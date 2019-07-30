@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mqtt_app/mqtt/topic.dart';
 import 'package:mqtt_app/main.dart';
 
-
+import 'package:mqtt_app/db/topic.dart' as model;
+import 'package:mqtt_app/db/db.dart' as db;
 
 class TopicPage extends StatefulWidget {
   @override
@@ -59,6 +60,16 @@ class _TopicPageState extends State<TopicPage> {
                         MqttTopic(name: topicNameController.text,
                               symbols: topicSymbolsController.text)
                        );
+                      });
+                      
+                      var database = new db.DatabaseHelper();
+                      var topic = new model.Topic(name: topicNameController.text, symbols: topicSymbolsController.text);
+                      topic.setTopicId(1);
+                      database.saveTopic(topic).then((r){print(r);});
+                      database.getTopic().then((list){
+                        for(var i in list){
+                          print(i.name);
+                        }
                       });
                       Navigator.of(context).pop();
                     },
