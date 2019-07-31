@@ -10,6 +10,7 @@ class Topic {
   Topic.map(dynamic obj) {
     this.name = obj["name"];
     this.symbols = obj["symbols"];
+    print(this);
   }
 
   Map<String, dynamic> toMap() {
