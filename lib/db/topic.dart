@@ -17,7 +17,6 @@ class Topic {
     var map = new Map<String, dynamic>();
     map["name"] = name;
     map["symbols"] = symbols;
-    print(map);
     return map;
   }
 
