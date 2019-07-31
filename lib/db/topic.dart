@@ -20,5 +20,6 @@ class Topic {
   }
   void setTopicId(int id) {
     this.id = id;
+    print(id)
   }
 }
