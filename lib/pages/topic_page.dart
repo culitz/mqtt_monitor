@@ -15,6 +15,9 @@ class _TopicPageState extends State<TopicPage> {
   final TextEditingController topicSymbolsController = TextEditingController();
   final ScrollController listController = ScrollController();
 
+  List<model.Topic> dbTopics = <model.Topic>[];
+  var database = new db.DatabaseHelper();
+
   @override
   Widget build (BuildContext context) {
     return new Scaffold(
@@ -55,22 +58,9 @@ class _TopicPageState extends State<TopicPage> {
                   FlatButton(
                     child: new Text("Add"),
                     onPressed: (){
-                      setState(() {
-                        topics.add(
-                        MqttTopic(name: topicNameController.text,
-                              symbols: topicSymbolsController.text)
-                       );
-                      });
-                      
-                      var database = new db.DatabaseHelper();
+                      setState(() {});
                       var topic = new model.Topic(name: topicNameController.text, symbols: topicSymbolsController.text);
-                      topic.setTopicId(1);
                       database.saveTopic(topic).then((r){print(r);});
-                      database.getTopic().then((list){
-                        for(var i in list){
-                          print(i.name);
-                        }
-                      });
                       Navigator.of(context).pop();
                     },
                   ),
@@ -83,14 +73,44 @@ class _TopicPageState extends State<TopicPage> {
     );
   }
 
-  List<Widget> _buildTopicList(){
-    return topics
-        .map((MqttTopic topic) => Card(
+  List<Widget> _buildTopicList(){   
+    database.getTopic().then(
+      (List<model.Topic> topicList){
+        dbTopics.clear();
+        topicList.forEach((topic){
+          dbTopics.add(topic);
+        });
+        //setState(() {});
+      }
+    );
+    
+    return dbTopics
+        .map((model.Topic topic) => Card(
               color: Colors.white70,
               child: ListTile(
                 title: Text(topic.name),
                 subtitle: Text(topic.symbols),
                 dense: true,
+                onLongPress: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SimpleDialog(
+                        title: new Text("Dialog title"),
+                        children: <Widget>[
+                          FlatButton(
+                            child: new Text("Delete"),
+                            onPressed: (){
+                              database.deleteTopic(topic).then((value){
+                                setState(() {});
+                              });
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                    );
+                  });
+                },
               ),
             ))
         .toList()
