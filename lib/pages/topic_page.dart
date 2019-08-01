@@ -180,23 +180,24 @@ class _TopicPageState extends State<TopicPage> {
         FlatButton(
           child: Icon(Icons.autorenew),
           onPressed: () {
-            settingsServise.getSettings().then((settingsList)  {
-                print('settings $settingsList');
-                if(settingsList.first == null || settingsList.length == 0){
-                  settingsServise.saveSettings(models.Settings(brokerHost: '', brokerPort: '')).then((value){
-                    connect().then((value){
-                      print(value);
-                    }).catchError((error){
-                      print('Errors: $error');
-                    });
-                  });
-                }else{
-                  settingsList.first.brokerHost = brokerController.text;
-                  settingsList.first.brokerPort = brokerPortController.text;
-                  settingsServise.update(settingsList.first);
-                  print(settingsList.first);
-                }
-            });
+            // settingsServise.getSettings().then((settingsList)  {
+            //     print('settings $settingsList');
+            //     if(settingsList.first == null || settingsList.length == 0){
+            //       settingsServise.saveSettings(models.Settings(brokerHost: '', brokerPort: '')).then((value){
+            //         connect().then((value){
+            //           print(value);
+            //         }).catchError((error){
+            //           print('Errors: $error');
+            //         });
+            //       });
+            //     }else{
+            //       settingsList.first.brokerHost = brokerController.text;
+            //       settingsList.first.brokerPort = brokerPortController.text;
+            //       settingsServise.update(settingsList.first);
+            //       print(settingsList.first);
+            //     }
+            // });
+            startInit();
           },
         )
       ],
@@ -253,5 +254,25 @@ class _TopicPageState extends State<TopicPage> {
     //     });
     // });
     return true;
+  }
+
+  void startInit() async{
+    client = new AndroidMqttClient('10.20.33.62', '');
+    await client.makeConnect();
+    print('APP::Subscribing to the /devices/hwmon/controls/CPU Temperature');
+    const String topic = '/devices/hwmon/controls/CPU Temperature';
+    client.makeSubscribe(topic);
+
+    client.updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+        final MqttPublishMessage recMess = c[0].payload;
+        final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+        setState(() {
+          messages.add(Message(
+            message: pt, 
+            topic: topic, 
+            qos: recMess.payload.header.qos
+            ));
+        });
+    });
   }
 }
