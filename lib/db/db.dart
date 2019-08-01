@@ -3,7 +3,6 @@ import 'dart:io' as io;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:mqtt_app/db/topic.dart' as model;
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -28,39 +27,16 @@ class DatabaseHelper {
   void _onCreate(Database db, int version) async {
     // When creating the db, create the table
     await db.execute(
-        "CREATE TABLE Topic(id INTEGER PRIMARY KEY, name TEXT, symbols TEXT)");
-  }
-
-  Future<int> saveTopic(model.Topic topic) async {
-    var dbTopic = await db;
-    int res = await dbTopic.insert("Topic", topic.toMap());
-    return res;
-  }
-
-  Future<List<model.Topic>> getTopic() async {
-    var dbTopic = await db;
-    List<Map> list = await dbTopic.rawQuery('SELECT * FROM Topic');
-    List<model.Topic> topics = new List();
-    for (int i = 0; i < list.length; i++) {
-      var topic =
-          new model.Topic(name: list[i]["name"], symbols:list[i]["symbols"]);
-      topic.setTopicId(list[i]["id"]);
-      topics.add(topic);
-    }
-    print(topics.length);
-    return topics;
-  }
-
-  Future<int> deleteTopic(model.Topic topic) async {
-    var dbTopic = await db;
-    int res = await dbTopic.rawDelete('DELETE FROM Topic WHERE id = ?', [topic.id]);
-    return res;
-  }
-
-  Future<bool> update(model.Topic topic) async {
-    var dbTopic = await db;
-    int res =   await dbTopic.update("Topic", topic.toMap(),
-        where: "id = ?", whereArgs: <int>[topic.id]);
-    return res > 0 ? true : false;
+        "CREATE TABLE Topic(id INTEGER PRIMARY KEY, name TEXT, symbols TEXT)").then((value){
+          print('table Topic created');
+        }).catchError((error){
+          print(error);
+        });
+    await db.execute(
+         "CREATE TABLE Settings(id INTEGER PRIMARY KEY, brokerHost TEXT, symbols brokerPort)").then((value){
+           print('table settings created.');
+         }).catchError((error){
+           print(error);
+         });
   }
 }

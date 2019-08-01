@@ -24,7 +24,7 @@ class AndroidMqttClient extends MqttClient{
     super.connectionMessage = connMess;
   }
 
-  void makeConnect() async{
+  Future makeConnect() async{
     try {
       await super.connect();
     } on Exception catch (e) {

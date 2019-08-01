@@ -22,7 +22,7 @@ class App extends StatefulWidget {
 
 class _AppPageState extends State<App> {
 
-  AndroidMqttClient client = new AndroidMqttClient('10.20.33.62', '');
+  //AndroidMqttClient client = new AndroidMqttClient('10.20.33.62', '');
   String time = "None";
 
   PageController _pageController;
@@ -36,7 +36,7 @@ class _AppPageState extends State<App> {
 
   @override
   void initState() {
-    startInit();
+    //startInit();
     super.initState();
   }
 
@@ -58,24 +58,24 @@ class _AppPageState extends State<App> {
   }
 
 
-  void startInit() async{
-    await client.makeConnect();
-    print('APP::Subscribing to the /devices/hwmon/controls/CPU Temperature');
-    const String topic = '/devices/hwmon/controls/CPU Temperature';
-    client.makeSubscribe(topic);
+  // void startInit() async{
+  //   await client.makeConnect();
+  //   print('APP::Subscribing to the /devices/hwmon/controls/CPU Temperature');
+  //   const String topic = '/devices/hwmon/controls/CPU Temperature';
+  //   client.makeSubscribe(topic);
 
-    client.updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
-        final MqttPublishMessage recMess = c[0].payload;
-        final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-        time = pt;
-        print(time);
-        setState(() {
-          messages.add(Message(
-            message: pt, 
-            topic: topic, 
-            qos: recMess.payload.header.qos
-            ));
-        });
-    });
-  }
+  //   client.updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+  //       final MqttPublishMessage recMess = c[0].payload;
+  //       final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+  //       time = pt;
+  //       print(time);
+  //       setState(() {
+  //         messages.add(Message(
+  //           message: pt, 
+  //           topic: topic, 
+  //           qos: recMess.payload.header.qos
+  //           ));
+  //       });
+  //   });
+  // }
 }

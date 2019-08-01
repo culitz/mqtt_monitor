@@ -40,6 +40,12 @@ class _SettingsPageState extends State<SettingsPage>{
             decoration: InputDecoration(hintText: 'Broker port'),
           ),
         ),
+        FlatButton(
+          child: Icon(Icons.autorenew),
+          onPressed: () {
+
+          },
+        )
       ],
     )); 
     return settings.toList();
